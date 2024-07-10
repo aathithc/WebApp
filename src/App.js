@@ -1,28 +1,11 @@
+// App.js
 import React, { useEffect, useState } from 'react';
 import { BrowserRouter as Router, Route, Routes, Link } from 'react-router-dom';
 import axios from 'axios';
 import './App.css';
-
-function Home() {
-    useEffect(() => {
-        console.log('Home component rendered');
-    }, []);
-    return <h1>Welcome to ETS Laboratories</h1>;
-}
-
-function Events() {
-    useEffect(() => {
-        console.log('Events component rendered');
-    }, []);
-    return <h1>Events</h1>;
-}
-
-function Evaluations() {
-    useEffect(() => {
-        console.log('Evaluations component rendered');
-    }, []);
-    return <h1>Evaluations</h1>;
-}
+import Home from './pages/Home';
+import Events from './pages/Events';
+import Evaluations from './pages/Evaluations';
 
 function App() {
     const [weather, setWeather] = useState('No weather data available');
