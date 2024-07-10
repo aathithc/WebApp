@@ -11,10 +11,6 @@ function App() {
     const [weather, setWeather] = useState('No weather data available');
     const [events, setEvents] = useState([]);
     const [currentTime, setCurrentTime] = useState(new Date());
-    const apiKeyWeather = 'd422439877407639bd97d97e3d05d479';
-    const city = 'Richardson'; // Richardson, Texas
-    const apiKeySmartsheet = ''; // Add your Smartsheet API key here
-    const sheetId = 'YOUR_SHEET_ID'; // Replace with your sheet ID
 
     useEffect(() => {
         console.log('App component rendered');
@@ -23,17 +19,12 @@ function App() {
     }, []);
 
     useEffect(() => {
-        if (apiKeyWeather && city) {
-            fetchWeather();
-        }
-        if (apiKeySmartsheet && sheetId) {
-            fetchAgenda();
-        }
+        fetchWeather();
+        fetchAgenda();
     }, []);
 
     const fetchWeather = () => {
-        const url = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKeyWeather}&units=imperial`;
-        axios.get(url)
+        axios.get('http://localhost:5001/api/weather')
             .then(response => {
                 const weatherData = response.data;
                 const temp = weatherData.main.temp;
@@ -44,22 +35,12 @@ function App() {
     };
 
     const fetchAgenda = () => {
-        const url = `https://api.smartsheet.com/2.0/sheets/${sheetId}`;
-        axios.get(url, {
-            headers: {
-                'Authorization': `Bearer ${apiKeySmartsheet}`
-            }
-        })
-        .then(response => {
-            const eventsData = response.data.rows.map(row => {
-                const time = row.cells.find(cell => cell.columnId === 'TIME_COLUMN_ID').value;
-                const title = row.cells.find(cell => cell.columnId === 'TITLE_COLUMN_ID').value;
-                const participants = row.cells.find(cell => cell.columnId === 'PARTICIPANTS_COLUMN_ID').value;
-                return { time, title, participants };
-            });
-            setEvents(eventsData);
-        })
-        .catch(error => console.error('Error fetching agenda:', error));
+        axios.get('http://localhost:5000/api/agenda')
+            .then(response => {
+                const eventsData = response.data;
+                setEvents(eventsData);
+            })
+            .catch(error => console.error('Error fetching agenda:', error));
     };
 
     return (
